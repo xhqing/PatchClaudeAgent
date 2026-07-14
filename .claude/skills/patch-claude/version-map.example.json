@@ -1,0 +1,19 @@
+{
+  "_comment": "version-map.json 模板。真实 version-map.json 由 apply-patches.py 引擎在每台机器上自动生成并回写，不入库。这里仅作格式参考。",
+  "_schema": {
+    "version": "扩展 package.json 的 version",
+    "ext_dir": "扩展目录名（带版本号）",
+    "applied_at": "首次应用日期",
+    "patches": {
+      "<patch-id>": {
+        "status": "verified | needs-reapply | broken",
+        "reason": "引擎回写的备注",
+        "applied_at": "ISO 日期",
+        "blocks": [
+          { "file": "改动块目标文件相对路径", "status": "verified|needs-reapply|broken", "reason": "..." }
+        ]
+      }
+    }
+  },
+  "versions": {}
+}
