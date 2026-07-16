@@ -1,0 +1,123 @@
+{
+  "_comment": "version-map.json 模板。真实 version-map.json 由 apply-patches.py 引擎在每台机器上自动生成并回写，不入库。这里仅作格式参考。",
+  "_schema": {
+    "version": "扩展 package.json 的 version",
+    "ext_dir": "扩展目录名（带版本号）",
+    "applied_at": "首次应用日期",
+    "patches": {
+      "<patch-id>": {
+        "status": "verified | needs-reapply | broken",
+        "reason": "引擎回写的备注",
+        "applied_at": "ISO 日期",
+        "blocks": [
+          {
+            "file": "改动块目标文件相对路径",
+            "status": "verified|needs-reapply|broken",
+            "reason": "..."
+          }
+        ]
+      }
+    }
+  },
+  "versions": {
+    "2.1.211": {
+      "ext_dir": "anthropic.claude-code-2.1.211-darwin-arm64",
+      "applied_at": "2026-07-16",
+      "patches": {
+        "001-default-expand-thinking": {
+          "status": "needs-reapply",
+          "reason": "webview/index.js:needs-reapply",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "needs-reapply",
+              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
+            }
+          ]
+        },
+        "002-session-history-running-badge": {
+          "status": "needs-reapply",
+          "reason": "webview/index.js:needs-reapply; webview/index.css:needs-reapply",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "needs-reapply",
+              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
+            },
+            {
+              "file": "webview/index.css",
+              "status": "needs-reapply",
+              "reason": "webview/index.css: 待追加，marker @keyframes ccRunPulse 当前不存在"
+            }
+          ]
+        },
+        "003-usage-icon-never-visible": {
+          "status": "needs-reapply",
+          "reason": "webview/index.js:needs-reapply",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "needs-reapply",
+              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
+            }
+          ]
+        },
+        "004-suppress-login-on-auth-fail": {
+          "status": "needs-reapply",
+          "reason": "webview/index.js:needs-reapply",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "needs-reapply",
+              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
+            }
+          ]
+        },
+        "005-context-window-from-env": {
+          "status": "needs-reapply",
+          "reason": "webview/index.js:needs-reapply",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "needs-reapply",
+              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
+            }
+          ]
+        },
+        "006-precise-usage-display": {
+          "status": "broken",
+          "reason": "webview/index.js:verified; webview/index.js:broken",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（定位器确认 no_change）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "broken",
+              "reason": "webview/index.js: 定位失败 — locator 返回不合格: {'found': False, 'reason': 'IXe 签名未命中'}"
+            }
+          ]
+        },
+        "007-diff-editor-follows-ui-theme": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 renderOverviewRuler:!1,scrollBeyondLastLine:!1,minimap:{enabled:!1},automaticLayout:!0,theme:document 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4809794→4809848"
+            }
+          ],
+          "applied_at": "2026-07-16"
+        }
+      }
+    }
+  }
+}

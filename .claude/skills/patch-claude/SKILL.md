@@ -120,6 +120,7 @@ def locate(src):
 - **`type:append`**：纯追加自创类/样式，天然可移植，marker 用首个 `@keyframes` 名或类名判幂等。
 - **`type:replace`**：仅当确有稳定 old 串（不依赖混淆名）时用，否则优先 locate。
 - 锚点稳定度见下方表格；定位器用正则捕获组动态提取混淆符号名，**不写死任何混淆名**。
+- **多改动块的 idempotent 标记必须各自不同**：补丁含 ≥2 个改动块时，每块的 `### idempotent:` 要用各自唯一的稳定串（如各自改动点独有的前缀），**不能共享同一个标记**。引擎在跑定位器之前会先查 `### idempotent:`——共享标记会导致块 1 应用后、块 2 一查就误判「已应用」直接跳过，只改了块 1。007 曾因此只改了卡片 diff、漏掉全屏 diff（文件长度只 +54 而非 +108），改用各自含 `renderOverviewRuler:!1`/`:!0` 前缀的标记后修复。（引擎实际识别的字段名是 `### idempotent:`，不是 `idempotent_marker:`。）
 
 ## 不可改的范围（向用户坦诚说明）
 
@@ -134,5 +135,6 @@ def locate(src):
 |------|------|--------|------|
 | 001 思考默认展开 | `type:locate`（定位器） | **较好** | 用 `Ctrl+O` 翻转指纹 `key=="o")…setter(x=>!x)` + useState `[state,setter]=HOOK(!1)` 初值做稳定锚点，正则动态捕获混淆符号名，跨版本自适应。幂等自洽（已应用态返回 `old=new`）。已验证 `2.1.198`。 |
 | 002 历史会话运行标记 | `type:locate`（定位器） | **较好** | 用 `ariaLabel:"Session history"` + `.sessionName` 字段名 + `busy.value`/`pendingInput.value` 做稳定锚点，正则动态提取混淆符号名，跨版本自适应。CSS 块纯 append 天然可移植。已验证 `2.1.195`。 |
+| 007 diff 主题跟随明暗 | `type:locate`（两块） | **较好** | 用 `createDiffEditor` 的 option 序列（`renderOverviewRuler`/`scrollBeyondLastLine`/`minimap`/`automaticLayout`/`theme`，均为 Monaco 公开 API 名）做稳定锚点，按 `renderOverviewRuler:!1`/`:!0` 分卡片 / 全屏两块，锁定 `theme:"vs-dark"` 字面量。深色零影响（三元 else 仍取 `vs-dark`）。两块用各自不同的 `### idempotent:` 标记（含 `renderOverviewRuler:!?` 前缀）。已验证 `2.1.211`。 |
 
 升级后若 001 报 broken：定位器依赖的 `Ctrl+O` 翻转指纹或 useState `!1`/`!0` 初值结构被上游重构所致。按补丁 .md「人工重定位 fallback」逆向追 `q8t` 透传层调用链人工重定位一次，再按新结构补全定位器正则。这是交互大改时才触发的兜底，常规构建（混淆名/hook 名/透传函数名变化）定位器自动适配，无需人工——这也是 001 从 `type:replace` 死字节串升级为 `locate` 的原因：靠产品级行为锚点而非混淆名，跨版本可靠性显著优于死字节串。002 同为定位器化，两者移植性现已相当。

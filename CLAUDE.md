@@ -11,3 +11,6 @@
 
 <!-- commit-skill: agent-persona = ok -->
 - Agent 拟人名：已写入 README（Tinker，2026-07-14）
+
+<!-- commit-skill: automemory = ok -->
+- AutoMemory 目录：已配置到 .claude/memory/（2026-07-14 确认）
