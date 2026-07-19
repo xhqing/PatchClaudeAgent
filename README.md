@@ -13,6 +13,7 @@
 # PatchClaudeAgent
 
 > 🧑‍🔧 **Tinker** — the maintenance tinker who keeps your patches alive. Every time the VSCode Claude Code extension upgrades, Tinker re-locates the anchors and re-applies your custom patches through a self-healing engine.
+> 🧠 **Brain**: GLM-5.2 (powered by z.ai)
 
 [中文](README_cn.md)
 
@@ -22,7 +23,7 @@ PatchClaudeAgent is a self-maintaining patch skill for the locally installed `an
 
 ## Features
 
-Six self-describing, self-verifying patches:
+Current patches (each is a self-describing, self-verifying `.md` in `patches/`):
 
 | # | Patch | Effect |
 |---|-------|--------|
@@ -31,7 +32,13 @@ Six self-describing, self-verifying patches:
 | 003 | Usage icon never visible | Hide the usage pie-chart icon in proxy mode |
 | 004 | Suppress login on auth fail | Don't pop the login page when the token is exhausted |
 | 005 | Context window from env | Read `CONTEXT_WINDOW` from `.env` instead of the built-in model table |
-| 006 | Precise usage display | Show concrete token counts (M/K) in the usage popup |
+| 007 | Diff editor follows UI theme | Monaco diff cards follow the VSCode light/dark theme (no more dark diffs in light theme) |
+| 008 | Light-theme scroll shadow fix | Remove Monaco's dark scroll decorations that show as black bars in light theme |
+| 009 | Session reload button | Add a per-panel reload button that refreshes only the current webview |
+| 010 | Open image links | Markdown image links open in VSCode's built-in image viewer |
+| 011 | LaTeX math rendering | Render inline `$...$` and block `$$...$$` math via KaTeX in the conversation panel _(prototyping)_ |
+
+> Note: 006 (precise usage display) has been archived, so numbering jumps from 005 to 007.
 
 ## How it works
 

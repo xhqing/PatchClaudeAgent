@@ -5,7 +5,9 @@ target: webview/index.js
 default_status: needs-reapply
 ---
 
-# 006 使用量指示器精确化
+# 006 使用量指示器精确化（已废弃归档）
+
+> ⚠️ **已废弃归档（2026-07-16）——被 003 取代，已移出 patches/**。003 让用量组件整体 `return null`，饼图随之消失，本补丁的「精确化饼图」目标在 003 下永远不可见。叠加 2.1.211 上游重构：用量组件改名 `DXe`（`IXe` 这个名字被复用为 Plan 图标组件），`LXe` 也变成 Plan 图标，本补丁的 `IXe`/`LXe`/饼图锚点全部失效——改动1 幂等被 React 自带的 `strokeDashoffset` SVG 属性表误判命中、伪装「已应用」，实则连续弧从未注入（`strokeDasharray:"31.42"` 出现 0 次）；改动2 `function IXe(...)` 签名未命中、broken。已从 `patches/` 移至 `archive/`，引擎不再处理。保留备查，勿复用其锚点。
 
 上游 `IXe` 的饼图 `LXe` 只有 3 档预定义图标（`J9t` 把百分比映射到 50/75/99 三个固定 SVG path），使用率 <62.5% 一律画半圆，视觉误导。popup 文本只显示"X% remaining"百分比，不带具体 token 数。
 

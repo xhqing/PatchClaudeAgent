@@ -25,80 +25,69 @@
       "applied_at": "2026-07-16",
       "patches": {
         "001-default-expand-thinking": {
-          "status": "needs-reapply",
-          "reason": "webview/index.js:needs-reapply",
-          "blocks": [
-            {
-              "file": "webview/index.js",
-              "status": "needs-reapply",
-              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
-            }
-          ]
-        },
-        "002-session-history-running-badge": {
-          "status": "needs-reapply",
-          "reason": "webview/index.js:needs-reapply; webview/index.css:needs-reapply",
-          "blocks": [
-            {
-              "file": "webview/index.js",
-              "status": "needs-reapply",
-              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
-            },
-            {
-              "file": "webview/index.css",
-              "status": "needs-reapply",
-              "reason": "webview/index.css: 待追加，marker @keyframes ccRunPulse 当前不存在"
-            }
-          ]
-        },
-        "003-usage-icon-never-visible": {
-          "status": "needs-reapply",
-          "reason": "webview/index.js:needs-reapply",
-          "blocks": [
-            {
-              "file": "webview/index.js",
-              "status": "needs-reapply",
-              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
-            }
-          ]
-        },
-        "004-suppress-login-on-auth-fail": {
-          "status": "needs-reapply",
-          "reason": "webview/index.js:needs-reapply",
-          "blocks": [
-            {
-              "file": "webview/index.js",
-              "status": "needs-reapply",
-              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
-            }
-          ]
-        },
-        "005-context-window-from-env": {
-          "status": "needs-reapply",
-          "reason": "webview/index.js:needs-reapply",
-          "blocks": [
-            {
-              "file": "webview/index.js",
-              "status": "needs-reapply",
-              "reason": "webview/index.js: 定位成功且 old 唯一，待应用"
-            }
-          ]
-        },
-        "006-precise-usage-display": {
-          "status": "broken",
-          "reason": "webview/index.js:verified; webview/index.js:broken",
+          "status": "verified",
+          "reason": "webview/index.js:verified",
           "blocks": [
             {
               "file": "webview/index.js",
               "status": "verified",
               "reason": "webview/index.js: 已应用（定位器确认 no_change）"
-            },
+            }
+          ],
+          "applied_at": "2026-07-16"
+        },
+        "002-session-history-running-badge": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.css:verified",
+          "blocks": [
             {
               "file": "webview/index.js",
-              "status": "broken",
-              "reason": "webview/index.js: 定位失败 — locator 返回不合格: {'found': False, 'reason': 'IXe 签名未命中'}"
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（追加式，new 在 src）"
+            },
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 已应用（幂等命中 @keyframes ccRunPulse）"
             }
-          ]
+          ],
+          "applied_at": "2026-07-16"
+        },
+        "003-usage-icon-never-visible": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（定位器确认 no_change）"
+            }
+          ],
+          "applied_at": "2026-07-16"
+        },
+        "004-suppress-login-on-auth-fail": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 /*PATCHED: suppress login popup on token exhaustion*/ 命中）"
+            }
+          ],
+          "applied_at": "2026-07-16"
+        },
+        "005-context-window-from-env": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（定位器确认 no_change）"
+            }
+          ],
+          "applied_at": "2026-07-16"
         },
         "007-diff-editor-follows-ui-theme": {
           "status": "verified",
@@ -112,10 +101,151 @@
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: locate+replace 成功，长度 4809794→4809848"
+              "reason": "webview/index.js: 已应用（幂等标记 renderOverviewRuler:!0,scrollBeyondLastLine:!1,minimap:{enabled:!1},automaticLayout:!0,theme:document 命中）"
             }
           ],
           "applied_at": "2026-07-16"
+        },
+        "008-scroll-decoration-light-theme": {
+          "status": "verified",
+          "reason": "webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 成功，追加 867 字符"
+            }
+          ],
+          "applied_at": "2026-07-16"
+        }
+      }
+    },
+    "2.1.214": {
+      "ext_dir": "anthropic.claude-code-2.1.214-darwin-arm64",
+      "applied_at": "2026-07-18",
+      "patches": {
+        "001-default-expand-thinking": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810162→4810162"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "002-session-history-running-badge": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810162→4810398"
+            },
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 成功，追加 605 字符"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "003-usage-icon-never-visible": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810398→4810368"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "004-suppress-login-on-auth-fail": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810368→4810404"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "005-context-window-from-env": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810404→4810340"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "007-diff-editor-follows-ui-theme": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810340→4810394"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810394→4810448"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "008-scroll-decoration-light-theme": {
+          "status": "verified",
+          "reason": "webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 成功，追加 558 字符"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "009-session-reload-button": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4810448→4810892"
+            },
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 成功，追加 315 字符"
+            }
+          ],
+          "applied_at": "2026-07-18"
+        },
+        "010-open-image-links": {
+          "status": "verified",
+          "reason": "extension.js:verified",
+          "blocks": [
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: 已应用（幂等标记 executeCommand(\"vscode.open\", 命中）"
+            }
+          ],
+          "applied_at": "2026-07-18"
         }
       }
     }
