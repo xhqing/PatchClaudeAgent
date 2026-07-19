@@ -15,7 +15,7 @@
 > 🧑‍🔧 **Tinker** — the maintenance tinker who keeps your patches alive. Every time the VSCode Claude Code extension upgrades, Tinker re-locates the anchors and re-applies your custom patches through a self-healing engine.
 > 🧠 **Brain**: GLM-5.2 (powered by z.ai)
 
-[中文](README_cn.md)
+[简体中文](README_cn.md)
 
 PatchClaudeAgent is a self-maintaining patch skill for the locally installed `anthropic.claude-code` VSCode extension. Every time the extension upgrades, the patches are reapplied automatically through a locator-based engine, restoring your custom UI/interaction tweaks without hand-editing minified bundles.
 
