@@ -36,7 +36,7 @@ Current patches (each is a self-describing, self-verifying `.md` in `patches/`):
 | 008 | Light-theme scroll shadow fix | Remove Monaco's dark scroll decorations that show as black bars in light theme |
 | 009 | Session reload button | Add a per-panel reload button that refreshes only the current webview |
 | 010 | Open image links | Markdown image links open in VSCode's built-in image viewer |
-| 011 | LaTeX math rendering | Render inline `$...$` and block `$$...$$` math via KaTeX in the conversation panel _(prototyping)_ |
+| 011 | LaTeX math rendering | Render inline `$...$` and block `$$...$$` math via KaTeX in the conversation panel (library and fonts via jsdelivr CDN; requires network) |
 
 > Note: 006 (precise usage display) has been archived, so numbering jumps from 005 to 007.
 
