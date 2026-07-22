@@ -33,7 +33,7 @@ Current patches (each is a self-describing, self-verifying `.md` in `patches/`):
 | 004 | Suppress login on auth fail | Don't pop the login page when the token is exhausted |
 | 005 | Context window from env | Read `CONTEXT_WINDOW` from `.env` instead of the built-in model table |
 | 007 | Diff editor follows UI theme | Monaco diff cards follow the VSCode light/dark theme (no more dark diffs in light theme) |
-| 008 | Light-theme scroll shadow fix | Remove Monaco's dark scroll decorations that show as black bars in light theme |
+| 008 | Light-theme diff shadow fix | Remove Monaco's dark scroll decorations (top black bar) and the card's dark truncation gradient (bottom shadow) in light theme |
 | 009 | Session reload button | Add a per-panel reload button that refreshes only the current webview |
 | 010 | Open image links | Markdown image links open in VSCode's built-in image viewer |
 | 011 | LaTeX math rendering | Render inline `$...$` and block `$$...$$` math via KaTeX in the conversation panel (library and fonts via jsdelivr CDN; requires network) |

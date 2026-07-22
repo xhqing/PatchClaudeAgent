@@ -15,8 +15,8 @@ patch-claude/              ← 仓库只含原创逻辑，可多设备同步
 ├── SKILL.md                    ← 本文件（智能体工作流 + 合规边界）
 ├── .gitignore                  ← 排除 Anthropic 原始文件与本机产物
 ├── patches/                    ← 补丁清单，每个补丁一个 .md，自描述自验证
-│   ├── 001-default-expand-thinking.md
-│   └── 002-session-history-running-badge.md
+│   ├── 002-session-history-running-badge.md
+│   └── archive/                ← 已停用归档的补丁（移出生效清单，引擎不再应用）
 └── scripts/
     ├── apply-patches.py        ← 核心引擎：定位→应用→校验→回写状态
     └── rollback.py             ← 用本机备份回滚单条或全部补丁
@@ -133,12 +133,12 @@ def locate(src):
 
 | 补丁 | 机制 | 移植性 | 说明 |
 |------|------|--------|------|
-| 001 思考默认展开 | `type:locate`（定位器） | **较好** | 用 `Ctrl+O` 翻转指纹 `key=="o")…setter(x=>!x)` + useState `[state,setter]=HOOK(!1)` 初值做稳定锚点，正则动态捕获混淆符号名，跨版本自适应。幂等自洽（已应用态返回 `old=new`）。已验证 `2.1.198`。 |
+| ~~001 思考默认展开~~（已归档） | `type:locate`（定位器） | — | 已于 2.1.217 用户停用并归档至 `patches/archive/`：让 thinking 块默认展开的定制取消，恢复官方折叠态。原机制见归档补丁 .md。 |
 | 002 历史会话运行标记 | `type:locate`（定位器） | **较好** | 用 `ariaLabel:"Session history"` + `.sessionName` 字段名 + `busy.value`/`pendingInput.value` 做稳定锚点，正则动态提取混淆符号名，跨版本自适应。CSS 块纯 append 天然可移植。已验证 `2.1.195`。 |
 | 007 diff 主题跟随明暗 | `type:locate`（两块） | **较好** | 用 `createDiffEditor` 的 option 序列（`renderOverviewRuler`/`scrollBeyondLastLine`/`minimap`/`automaticLayout`/`theme`，均为 Monaco 公开 API 名）做稳定锚点，按 `renderOverviewRuler:!1`/`:!0` 分卡片 / 全屏两块，锁定 `theme:"vs-dark"` 字面量。深色零影响（三元 else 仍取 `vs-dark`）。两块用各自不同的 `### idempotent:` 标记（含 `renderOverviewRuler:!?` 前缀）。已验证 `2.1.211`。 |
-| 008 浅色调淡顶部阴影 | `type:append`（单块） | **很好** | 在 webview/index.css 末尾追加 `body.vscode-light .scroll-decoration{box-shadow:rgba(0,0,0,0.06) 0 6px 6px -6px inset!important}`，浅色主题覆盖 Monaco diff 顶部滚动阴影（原色取 `--vscode-scrollbar-shadow` 变量、不随 Monaco theme 切，是 007 的尾部盲区——007 让 Monaco 变浅后该深色阴影暴露成黑横条）。哨兵类 `.cc-patch-008` 让引擎 append 幂等 marker 不误命中已存在的 `.vscode-light`/`.scroll-decoration`。深色零影响（前缀 `body.vscode-light` 不命中）。已验证 `2.1.211`。 |
+| 008 浅色消除 diff 卡片黑阴影 | `type:append`（单块，v4） | **很好** | 在 webview/index.css 末尾追加三保险：① `body.vscode-light{--vscode-scrollbar-shadow:transparent!important}` 兜底所有吃该变量的 Monaco 滚动阴影；② 逐选择器 `.scroll-decoration`/`.shadow.top`/`.shadow.left`/`.shadow.top.left`/`.diff-review-shadow` 浅色下 `box-shadow:none`；③ `[class*=truncationGradient]` 浅色下渐变到白（v4 新增，根治内嵌卡片底部 30px 黑阴影——该截断淡出遮罩写死 `linear-gradient(#0000,#1e1e1e)`、不吃变量，是 007 切浅底后暴露的底部黑阴影真凶；v3 误判为 `.diff-review-shadow` 漏治）。007 的尾部盲区：007 只切 Monaco theme、管不到这些走变量/写死色的阴影与遮罩。哨兵类 `.cc-patch-008e`（演进 008→008b→008c→008d→008e，每次改 append 内容必须换新哨兵引擎才重新追加；旧块留在文件被新版在后覆盖，无害）。属性选择器 `[class*=truncationGradient]` 规避混淆后缀 `_s6OFow` 跨版本变化。深色零影响（前缀 `body.vscode-light` 不命中）。已验证 `2.1.215`。 |
 | 009 会话刷新按钮 | `type:locate`+`append` | **较好** | 在 New session 按钮后注入刷新按钮，点击 `window.location.reload()` **只重载当前 webview**（不动主进程 extension.js——探查确认主进程 message 全走 `fromClient` 转发、不在此分发，改主进程风险高且 location.reload 天然 per-webview）。锚点用全文件唯一的明文 `ariaLabel:"New session"`+`iconSize:20`，正则动态捕获按钮组件名（`yf`）/图标名（`hZe`），不写死混淆名。刷新图标为 Lucide refresh-cw 描边（`stroke:currentColor`、`stroke-width:1.5`；经渲染对照选此——fill 版偏粗，stroke 1.5 线条精细度匹配工具栏 `hZe`，且 CC 自身 fill/stroke 混用），自创类 `ccReloadBtn` 挂点击旋转动画。历史恢复依赖 CC 自带的前端重新初始化拉取（无需补丁介入）。边界：全屏编辑器模式（`IS_FULL_EDITOR`）该工具栏不渲染、按钮不出现。已验证 `2.1.214`。 |
 | 010 图片链接可打开 | `type:locate`（单块） | **较好** | **首个改主进程 extension.js 的补丁**（前 001-009 都动 webview）。修 `openFile` 用 `showTextDocument` 打二进制图片失败被静默吞 → 点图片链接没反应。在 directory 分支 `}}catch{}` 与 `showTextDocument` 之间插图片 try 分支，命中图片扩展名走 `vscode.commands.executeCommand("vscode.open",uri)`（内置图片查看器），其它文件保留原 `showTextDocument`（代码文件 `revealRange` 行号定位不受影响）。两步定位器：第 1 步锚 `revealInExplorer`→`showTextDocument` 链（均 VSCode 公开 API 名，用 `(?P=ns)`/`(?P=uri)` 反向引用锁死 openFile），第 2 步向前 200 字找 `statSync(PATH)` 取路径变量；正则测扩展名结尾绕开被压没的 `Tn.extname`。幂等标记 `executeCommand("vscode.open",`（原生 0 次、补丁特有）。已验证 `2.1.214`。 |
 | 011 LaTeX 数学渲染 | 三块 `locate`（CSP）+ 一块 `append`（注入） | **较好**（CSP 块）/ **很好**（append 块） | **首个放开 CSP 的补丁**：三块 `locate` 把 `getHtmlForWebview` 里 CSP 的 `style-src`/`font-src`/`script-src` 各追加 `https://cdn.jsdelivr.net`（锚点为 CSP 指令名 + VSCode 公开 API `cspSource` + nonce 变量 `${u}`，三者在 extension.js 各唯一命中，追加式幂等）；一块 `append` 在 webview/index.js 末尾注入 KaTeX（0.18.1，jsdelivr CDN）链式加载 + `renderMathInElement` 扫 `#root` + `MutationObserver` 防抖 250ms 重渲染，哨兵 `.ccKatex011`（append 内容首个点号串）。**关键约束**：CC 的 DOMPurify 对 `<span style>` 只留 `color:` 开头，故 KaTeX 必须在**净化完成后**用 DOM 扫描注入（事后操作 DOM 不再经 DOMPurify，KaTeX 排版 style 得以保留）；若在 markdown→HTML 阶段注入会被剥光。依赖联网（CDN），`script-src` 仅放开 jsdelivr 单一可信域。已验证 `2.1.215`。 |
 
-升级后若 001 报 broken：定位器依赖的 `Ctrl+O` 翻转指纹或 useState `!1`/`!0` 初值结构被上游重构所致。按补丁 .md「人工重定位 fallback」逆向追 `q8t` 透传层调用链人工重定位一次，再按新结构补全定位器正则。这是交互大改时才触发的兜底，常规构建（混淆名/hook 名/透传函数名变化）定位器自动适配，无需人工——这也是 001 从 `type:replace` 死字节串升级为 `locate` 的原因：靠产品级行为锚点而非混淆名，跨版本可靠性显著优于死字节串。002 同为定位器化，两者移植性现已相当。
+> **locate 化补丁的 broken 兜底**：升级后若某定位器补丁报 broken，多为上游重构致锚点结构变化（如 003 在 2.1.217 因覆盖变量混淆名 `Bme→Hme` 失效，改以 CSS 明文 `usageContainer` 为主锚重定位后修复）。常规构建（混淆名/hook 名/透传函数名变化）定位器自动适配，无需人工；仅交互级大改才需按补丁 .md「人工重定位 fallback」手工重定位一次。核心：靠产品级行为锚点（明文类名、公开 API 名、UI 文案）而非混淆名，跨版本可靠性远胜死字节串——这是全系列补丁从 `type:replace` 升级到 `locate` 的统一方向。
