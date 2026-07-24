@@ -56,20 +56,33 @@ def locate(src):
         return {"found": False, "reason": "未匹配到 New session 按钮结构（ariaLabel/iconSize/onClick/children）"}
     btn = m.group(1)
     old = m.group(0)
-    # Lucide refresh-cw 描边图标（24x24, stroke-width 1.5）。
-    # 选描边而非填充的理由（经渲染对照 + 视觉分析确认）：
-    # 工具栏 New session 图标 hZe 是「气泡+加号」，加号笔画约 1 单位宽，视觉精细；
-    # Heroicons arrow-path solid（fill 20x20）笔画约 1.5 单位，明显偏粗、与 hZe 不协调；
-    # Lucide refresh-cw（stroke 1.5）线条精细度与 hZe 加号几乎一致，视觉最协调。
-    # 且 CC 自身有 17 处 strokeWidth:1.5 + linecap round 的描边图标（fill / stroke 本就混用），不违和。
+    # Lucide refresh-cw 描边图标（Lucide 原生 24x24 坐标系；viewBox -1 -1 26 26；stroke-width 1.3）。
+    # 同时对齐 CC 工具栏图标的「线宽」与「圆形大小」两项（2.1.217 实测 CC 图标后反推）：
+    #
+    # 【CC 图标画法】fZe / mZe 是 fill 填充轮廓体系（svg fill:none + path fill:currentColor，
+    #   viewBox 0 0 20 20），轮廓宽 = 外圆 R7.5 - 内圆 R6.5 = 1.0 单位 = 1px；圆形外缘半径 7.5px
+    #   （fill 轮廓边界即路径，无外扩）。
+    # 【线宽对齐】本补丁用 stroke 体系，要 1px 线宽：strokeWidth 渲染值需 = 1。
+    # 【圆形大小对齐】关键差异——stroke 中心对齐会外扩半个线宽：Lucide 圆弧半径 9（24 坐标），
+    #   若用默认 viewBox 0 0 24 24，外缘半径 = (9 + Sw/2) * 20/24，恒大于 CC 的 7.5px，圆形偏大
+    #   （用户实测反馈「圆形明显比左边大」，即此）。注意：两边边界框占比都是 75%，但 stroke 外扩
+    #   使 refresh 的视觉圆形比 CC 大半个线宽——「边界框相同」不等于「视觉圆形相同」。
+    #
+    # 解法：保持 Lucide 原始 path 不动（不手算缩放坐标，避免贝塞尔点算错导致变形），改用放大且
+    #   居中的 viewBox 把整体等比缩小，再按比例补偿 strokeWidth：
+    #   设 viewBox 边长 V、strokeWidth Sw，要求「线宽 1px + 圆外缘半径 7.5px」：
+    #     Sw * 20/V = 1   且   (9 + Sw/2) * 20/V = 7.5   =>   V = 25.71, Sw = 1.286（精确解）。
+    #   取最近的整数组合 viewBox -1 -1 26 26 + strokeWidth 1.3：
+    #     线宽 = 1.3 * 20/26 = 1.0px（= CC）；圆外缘 = (9 + 0.65) * 20/26 = 7.42px（CC 7.5px，差 0.08px）。
+    #   viewBox 以 Lucide 中心 (12,12) 为原点向四周扩到 26（min-x=min-y=-1），内容居中不偏移。
     icon_path = ('M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8 '
                  'M21 3v5h-5 M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16 '
                  'M3 21v-5h5')
     reload_btn = (
         ',b(' + btn + ',{ariaLabel:"Reload this session",iconSize:20,'
         'className:"ccReloadBtn",onClick:()=>window.location.reload(),'
-        'children:b("svg",{width:"20",height:"20",viewBox:"0 0 24 24",fill:"none",'
-        'stroke:"currentColor",strokeWidth:"1.5",strokeLinecap:"round",'
+        'children:b("svg",{width:"20",height:"20",viewBox:"-1 -1 26 26",fill:"none",'
+        'stroke:"currentColor",strokeWidth:"1.3",strokeLinecap:"round",'
         'strokeLinejoin:"round","aria-hidden":"true",'
         'children:b("path",{d:"' + icon_path + '"})})})'
     )
@@ -90,7 +103,7 @@ def locate(src):
 
 - `ariaLabel:"Reload this session"` 提供可访问性 + 唯一标记。
 - `onClick:()=>window.location.reload()` —— 核心：只重载当前 webview。
-- `children` 为内联 SVG 描边图标（Lucide refresh-cw），`stroke:"currentColor"` 跟随文字色，适配明暗主题；`stroke-width:1.5` 线条精细，与 New session 按钮视觉协调（理由见定位器注释）。
+- `children` 为内联 SVG 描边图标（Lucide refresh-cw），`stroke:"currentColor"` 跟随文字色，适配明暗主题。图标同时经 `viewBox:-1 -1 26 26` + `stroke-width:1.3` 对齐 CC 工具栏图标的「线宽 1px」与「圆形外缘半径 7.5px」两项（换算与理由见定位器注释）。注：两边边界框占比同为 75%，但 stroke 中心外扩使 refresh 视觉圆形偏大，故需放大 viewBox 缩小整体——「边界框相同」不等于「视觉圆形相同」。
 - `className:"ccReloadBtn"` 作为 CSS 钩子（改动 2 挂点击旋转动画）。
 
 #### verify
@@ -139,3 +152,4 @@ def locate(src):
 ## 已验证版本
 
 - `2.1.214`：已应用（2026-07-18，index.js locate+replace、index.css append，`node --check` 通过，切片确认刷新按钮紧随 New session 按钮后；图标经渲染对照 + 视觉分析选定 Lucide refresh-cw stroke 1.5，线条精细度匹配 hZe）。**功能实测待 GUI 内确认**：reload window 后按钮可见性、只刷当前面板、历史恢复、流式中断行为——结果回填本节「验收要点」。
+- `2.1.217`：图标两次微调（均同步到定位器与本机 index.js 已注入处）。① 线宽：strokeWidth 1.5 -> 1.2（用户反馈偏粗）；实测本版工具栏图标 fZe / mZe 为 fill 轮廓体系、线宽 1px（外圆 R7.5 - 内圆 R6.5 = 1.0 单位）。② 圆形大小：strokeWidth 1.2 -> 1.3 且 viewBox 0 0 24 24 -> -1 -1 26 26（用户反馈「圆形明显比左边大」）。根因：stroke 中心对齐外扩半个线宽，使圆外缘 (9+Sw/2)*20/24 > CC 的 7.5px；放大 viewBox 缩小整体、按比例补偿 stroke，使线宽 = 1.3*20/26 = 1.0px、圆外缘 = 7.42px（CC 7.5px）。功能实测仍待 GUI 内确认。

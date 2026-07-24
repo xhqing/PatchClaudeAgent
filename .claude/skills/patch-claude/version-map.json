@@ -491,23 +491,6 @@
           ],
           "applied_at": "2026-07-22"
         },
-        "009-session-reload-button": {
-          "status": "verified",
-          "reason": "webview/index.js:verified; webview/index.css:verified",
-          "blocks": [
-            {
-              "file": "webview/index.js",
-              "status": "verified",
-              "reason": "webview/index.js: 已应用（幂等标记 ccReloadBtn 命中）"
-            },
-            {
-              "file": "webview/index.css",
-              "status": "verified",
-              "reason": "webview/index.css: append 已应用（幂等命中 .ccReloadBtn）"
-            }
-          ],
-          "applied_at": "2026-07-22"
-        },
         "010-open-image-links": {
           "status": "verified",
           "reason": "extension.js:verified",
