@@ -5,7 +5,6 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-19C37D.svg)](https://claude.com/claude-code)
 [![Type](https://img.shields.io/badge/Type-AI%20Agent-FF1493.svg)](#)
 
 </div>
@@ -13,7 +12,6 @@
 # PatchClaudeAgent
 
 > 🧑‍🔧 **Tinker** — the maintenance tinker who keeps your patches alive. Every time the VSCode Claude Code extension upgrades, Tinker re-locates the anchors and re-applies your custom patches through a self-healing engine.
-> 🧠 **Brain**: GLM-5.2 (powered by z.ai)
 
 [简体中文](README_cn.md)
 

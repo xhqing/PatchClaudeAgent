@@ -5,7 +5,6 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-19C37D.svg)](https://claude.com/claude-code)
 [![Type](https://img.shields.io/badge/Type-AI%20Agent-FF1493.svg)](#)
 
 </div>
@@ -13,7 +12,6 @@
 # PatchClaudeAgent
 
 > 🧑‍🔧 **Tinker**（修补匠）—— 让你的补丁长存的维护匠人。每次 VSCode Claude Code 扩展升级后，Tinker 重新定位锚点，通过自愈引擎重新打上你定制的补丁。
-> 🧠 **大脑**：GLM-5.2（由 z.ai 提供）
 
 [English](README.md)
 

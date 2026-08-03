@@ -531,6 +531,125 @@
           "applied_at": "2026-07-22"
         }
       }
+    },
+    "2.1.220": {
+      "ext_dir": "anthropic.claude-code-2.1.220",
+      "applied_at": "2026-08-03",
+      "patches": {
+        "002-session-history-running-badge": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（追加式，new 在 src）"
+            },
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 已应用（幂等命中 @keyframes ccRunPulse）"
+            }
+          ]
+        },
+        "003-usage-icon-never-visible": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（定位器确认 no_change）"
+            }
+          ]
+        },
+        "004-suppress-login-on-auth-fail": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 /*PATCHED: suppress login popup on token exhaustion*/ 命中）"
+            }
+          ]
+        },
+        "005-context-window-from-env": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（定位器确认 no_change）"
+            }
+          ]
+        },
+        "007-diff-editor-follows-ui-theme": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 renderOverviewRuler:!1,scrollBeyondLastLine:!1,minimap:{enabled:!1},automaticLayout:!0,theme:document 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 renderOverviewRuler:!0,scrollBeyondLastLine:!1,minimap:{enabled:!1},automaticLayout:!0,theme:document 命中）"
+            }
+          ]
+        },
+        "008-scroll-decoration-light-theme": {
+          "status": "verified",
+          "reason": "webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 已应用（幂等命中 .cc-patch-008e）"
+            }
+          ]
+        },
+        "010-open-image-links": {
+          "status": "verified",
+          "reason": "extension.js:verified",
+          "blocks": [
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: 已应用（幂等标记 executeCommand(\"vscode.open\", 命中）"
+            }
+          ]
+        },
+        "011-latex-math-rendering": {
+          "status": "verified",
+          "reason": "extension.js:verified; extension.js:verified; extension.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: 已应用（幂等标记 style-src ${e.cspSource} 'unsafe-inline' https://cdn.jsdelivr.net 命中）"
+            },
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: 已应用（幂等标记 font-src ${e.cspSource} https://cdn.jsdelivr.net 命中）"
+            },
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: 已应用（幂等标记 script-src 'nonce-${u}' https://cdn.jsdelivr.net 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: append 已应用（幂等命中 .ccKatex011）"
+            }
+          ]
+        }
+      }
     }
   }
 }

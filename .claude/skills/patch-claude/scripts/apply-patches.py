@@ -46,7 +46,11 @@ def find_ext_dir(explicit=None):
         return explicit, read_version(explicit)
     cands = []
     for d in os.listdir(EXTENSIONS_ROOT):
-        if d.startswith("anthropic.claude-code-") and d.endswith("-darwin-arm64"):
+        # 仅按 anthropic.claude-code- 前缀匹配，不限定平台后缀：
+        # 自 2.1.220 起扩展目录名去掉了 -darwin-arm64 后缀（改用 universal 命名，
+        # 如 anthropic.claude-code-2.1.220），旧版仍带后缀（如 ...-2.1.217-darwin-arm64）。
+        # 两种命名都能被此前缀命中，下方按 read_version 读出的真实版本号排序取最新。
+        if d.startswith("anthropic.claude-code-"):
             full = os.path.join(EXTENSIONS_ROOT, d)
             if os.path.isdir(full):
                 cands.append((read_version(full), full))

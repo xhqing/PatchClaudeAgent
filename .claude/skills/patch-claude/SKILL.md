@@ -36,10 +36,10 @@ patch-claude/              ← 仓库只含原创逻辑，可多设备同步
 
 ### 步骤 1：定位当前扩展副本
 
-扩展目录名含版本号，升级后会变。用通配定位：
+扩展目录名含版本号，升级后会变。用通配定位（自 2.1.220 起目录名去掉了 `-darwin-arm64` 平台后缀、改用 universal 命名，故通配只按 `anthropic.claude-code-` 前缀匹配，新老两种命名都能覆盖）：
 
 ```bash
-EXT_DIR=$(ls -d ~/.vscode/extensions/anthropic.claude-code-*-darwin-arm64)
+EXT_DIR=$(ls -d ~/.vscode/extensions/anthropic.claude-code-*)
 ```
 
 若存在多个版本目录，取版本号最大的那个；若用户刚升级完旧的还在，提示用户旧目录可清理。
@@ -50,8 +50,10 @@ EXT_DIR=$(ls -d ~/.vscode/extensions/anthropic.claude-code-*-darwin-arm64)
 
 ### 步骤 2：运行引擎，逐补丁应用
 
+在项目根（PatchClaudeAgent）执行——引擎脚本随 skill 就在项目内 `.claude/skills/patch-claude/`，本机未装到全局，故用项目内相对路径：
+
 ```bash
-python3 ~/.claude/skills/patch-claude/scripts/apply-patches.py "$EXT_DIR"
+python3 .claude/skills/patch-claude/scripts/apply-patches.py "$EXT_DIR"
 ```
 
 引擎对每个补丁文件依次执行：
@@ -134,11 +136,11 @@ def locate(src):
 | 补丁 | 机制 | 移植性 | 说明 |
 |------|------|--------|------|
 | ~~001 思考默认展开~~（已归档） | `type:locate`（定位器） | — | 已于 2.1.217 用户停用并归档至 `patches/archive/`：让 thinking 块默认展开的定制取消，恢复官方折叠态。原机制见归档补丁 .md。 |
-| 002 历史会话运行标记 | `type:locate`（定位器） | **较好** | 用 `ariaLabel:"Session history"` + `.sessionName` 字段名 + `busy.value`/`pendingInput.value` 做稳定锚点，正则动态提取混淆符号名，跨版本自适应。CSS 块纯 append 天然可移植。已验证 `2.1.195`。 |
-| 007 diff 主题跟随明暗 | `type:locate`（两块） | **较好** | 用 `createDiffEditor` 的 option 序列（`renderOverviewRuler`/`scrollBeyondLastLine`/`minimap`/`automaticLayout`/`theme`，均为 Monaco 公开 API 名）做稳定锚点，按 `renderOverviewRuler:!1`/`:!0` 分卡片 / 全屏两块，锁定 `theme:"vs-dark"` 字面量。深色零影响（三元 else 仍取 `vs-dark`）。两块用各自不同的 `### idempotent:` 标记（含 `renderOverviewRuler:!?` 前缀）。已验证 `2.1.211`。 |
-| 008 浅色消除 diff 卡片黑阴影 | `type:append`（单块，v4） | **很好** | 在 webview/index.css 末尾追加三保险：① `body.vscode-light{--vscode-scrollbar-shadow:transparent!important}` 兜底所有吃该变量的 Monaco 滚动阴影；② 逐选择器 `.scroll-decoration`/`.shadow.top`/`.shadow.left`/`.shadow.top.left`/`.diff-review-shadow` 浅色下 `box-shadow:none`；③ `[class*=truncationGradient]` 浅色下渐变到白（v4 新增，根治内嵌卡片底部 30px 黑阴影——该截断淡出遮罩写死 `linear-gradient(#0000,#1e1e1e)`、不吃变量，是 007 切浅底后暴露的底部黑阴影真凶；v3 误判为 `.diff-review-shadow` 漏治）。007 的尾部盲区：007 只切 Monaco theme、管不到这些走变量/写死色的阴影与遮罩。哨兵类 `.cc-patch-008e`（演进 008→008b→008c→008d→008e，每次改 append 内容必须换新哨兵引擎才重新追加；旧块留在文件被新版在后覆盖，无害）。属性选择器 `[class*=truncationGradient]` 规避混淆后缀 `_s6OFow` 跨版本变化。深色零影响（前缀 `body.vscode-light` 不命中）。已验证 `2.1.215`。 |
+| 002 历史会话运行标记 | `type:locate`（定位器） | **较好** | 用 `ariaLabel:"Session history"` + `.sessionName` 字段名 + `busy.value`/`pendingInput.value` 做稳定锚点，正则动态提取混淆符号名，跨版本自适应。CSS 块纯 append 天然可移植。已验证 `2.1.220`。 |
+| 007 diff 主题跟随明暗 | `type:locate`（两块） | **较好** | 用 `createDiffEditor` 的 option 序列（`renderOverviewRuler`/`scrollBeyondLastLine`/`minimap`/`automaticLayout`/`theme`，均为 Monaco 公开 API 名）做稳定锚点，按 `renderOverviewRuler:!1`/`:!0` 分卡片 / 全屏两块，锁定 `theme:"vs-dark"` 字面量。深色零影响（三元 else 仍取 `vs-dark`）。两块用各自不同的 `### idempotent:` 标记（含 `renderOverviewRuler:!?` 前缀）。已验证 `2.1.220`。 |
+| 008 浅色消除 diff 卡片黑阴影 | `type:append`（单块，v4） | **很好** | 在 webview/index.css 末尾追加三保险：① `body.vscode-light{--vscode-scrollbar-shadow:transparent!important}` 兜底所有吃该变量的 Monaco 滚动阴影；② 逐选择器 `.scroll-decoration`/`.shadow.top`/`.shadow.left`/`.shadow.top.left`/`.diff-review-shadow` 浅色下 `box-shadow:none`；③ `[class*=truncationGradient]` 浅色下渐变到白（v4 新增，根治内嵌卡片底部 30px 黑阴影——该截断淡出遮罩写死 `linear-gradient(#0000,#1e1e1e)`、不吃变量，是 007 切浅底后暴露的底部黑阴影真凶；v3 误判为 `.diff-review-shadow` 漏治）。007 的尾部盲区：007 只切 Monaco theme、管不到这些走变量/写死色的阴影与遮罩。哨兵类 `.cc-patch-008e`（演进 008→008b→008c→008d→008e，每次改 append 内容必须换新哨兵引擎才重新追加；旧块留在文件被新版在后覆盖，无害）。属性选择器 `[class*=truncationGradient]` 规避混淆后缀 `_s6OFow` 跨版本变化。深色零影响（前缀 `body.vscode-light` 不命中）。已验证 `2.1.220`。 |
 | ~~009 会话刷新按钮~~（已归档） | `type:locate`+`append` | — | 已于 2.1.217 用户停用并归档至 `patches/archive/`：会话面板「刷新当前会话」按钮定制取消，恢复官方无该按钮态（本机 2.1.217 已回滚 index.js 按钮注入与 index.css 旋转动画）。原机制与图标迭代记录见归档补丁 .md。 |
-| 010 图片链接可打开 | `type:locate`（单块） | **较好** | **首个改主进程 extension.js 的补丁**（前 001-009 都动 webview）。修 `openFile` 用 `showTextDocument` 打二进制图片失败被静默吞 → 点图片链接没反应。在 directory 分支 `}}catch{}` 与 `showTextDocument` 之间插图片 try 分支，命中图片扩展名走 `vscode.commands.executeCommand("vscode.open",uri)`（内置图片查看器），其它文件保留原 `showTextDocument`（代码文件 `revealRange` 行号定位不受影响）。两步定位器：第 1 步锚 `revealInExplorer`→`showTextDocument` 链（均 VSCode 公开 API 名，用 `(?P=ns)`/`(?P=uri)` 反向引用锁死 openFile），第 2 步向前 200 字找 `statSync(PATH)` 取路径变量；正则测扩展名结尾绕开被压没的 `Tn.extname`。幂等标记 `executeCommand("vscode.open",`（原生 0 次、补丁特有）。已验证 `2.1.214`。 |
-| 011 LaTeX 数学渲染 | 三块 `locate`（CSP）+ 一块 `append`（注入） | **较好**（CSP 块）/ **很好**（append 块） | **首个放开 CSP 的补丁**：三块 `locate` 把 `getHtmlForWebview` 里 CSP 的 `style-src`/`font-src`/`script-src` 各追加 `https://cdn.jsdelivr.net`（锚点为 CSP 指令名 + VSCode 公开 API `cspSource` + nonce 变量 `${u}`，三者在 extension.js 各唯一命中，追加式幂等）；一块 `append` 在 webview/index.js 末尾注入 KaTeX（0.18.1，jsdelivr CDN）链式加载 + `renderMathInElement` 扫 `#root` + `MutationObserver` 防抖 250ms 重渲染，哨兵 `.ccKatex011`（append 内容首个点号串）。**关键约束**：CC 的 DOMPurify 对 `<span style>` 只留 `color:` 开头，故 KaTeX 必须在**净化完成后**用 DOM 扫描注入（事后操作 DOM 不再经 DOMPurify，KaTeX 排版 style 得以保留）；若在 markdown→HTML 阶段注入会被剥光。依赖联网（CDN），`script-src` 仅放开 jsdelivr 单一可信域。已验证 `2.1.215`。 |
+| 010 图片链接可打开 | `type:locate`（单块） | **较好** | **首个改主进程 extension.js 的补丁**（前 001-009 都动 webview）。修 `openFile` 用 `showTextDocument` 打二进制图片失败被静默吞 → 点图片链接没反应。在 directory 分支 `}}catch{}` 与 `showTextDocument` 之间插图片 try 分支，命中图片扩展名走 `vscode.commands.executeCommand("vscode.open",uri)`（内置图片查看器），其它文件保留原 `showTextDocument`（代码文件 `revealRange` 行号定位不受影响）。两步定位器：第 1 步锚 `revealInExplorer`→`showTextDocument` 链（均 VSCode 公开 API 名，用 `(?P=ns)`/`(?P=uri)` 反向引用锁死 openFile），第 2 步向前 200 字找 `statSync(PATH)` 取路径变量；正则测扩展名结尾绕开被压没的 `Tn.extname`。幂等标记 `executeCommand("vscode.open",`（原生 0 次、补丁特有）。已验证 `2.1.220`。 |
+| 011 LaTeX 数学渲染 | 三块 `locate`（CSP）+ 一块 `append`（注入） | **较好**（CSP 块）/ **很好**（append 块） | **首个放开 CSP 的补丁**：三块 `locate` 把 `getHtmlForWebview` 里 CSP 的 `style-src`/`font-src`/`script-src` 各追加 `https://cdn.jsdelivr.net`（锚点为 CSP 指令名 + VSCode 公开 API `cspSource` + nonce 变量 `${u}`，三者在 extension.js 各唯一命中，追加式幂等）；一块 `append` 在 webview/index.js 末尾注入 KaTeX（0.18.1，jsdelivr CDN）链式加载 + `renderMathInElement` 扫 `#root` + `MutationObserver` 防抖 250ms 重渲染，哨兵 `.ccKatex011`（append 内容首个点号串）。**关键约束**：CC 的 DOMPurify 对 `<span style>` 只留 `color:` 开头，故 KaTeX 必须在**净化完成后**用 DOM 扫描注入（事后操作 DOM 不再经 DOMPurify，KaTeX 排版 style 得以保留）；若在 markdown→HTML 阶段注入会被剥光。依赖联网（CDN），`script-src` 仅放开 jsdelivr 单一可信域。已验证 `2.1.220`。 |
 
 > **locate 化补丁的 broken 兜底**：升级后若某定位器补丁报 broken，多为上游重构致锚点结构变化（如 003 在 2.1.217 因覆盖变量混淆名 `Bme→Hme` 失效，改以 CSS 明文 `usageContainer` 为主锚重定位后修复）。常规构建（混淆名/hook 名/透传函数名变化）定位器自动适配，无需人工；仅交互级大改才需按补丁 .md「人工重定位 fallback」手工重定位一次。核心：靠产品级行为锚点（明文类名、公开 API 名、UI 文案）而非混淆名，跨版本可靠性远胜死字节串——这是全系列补丁从 `type:replace` 升级到 `locate` 的统一方向。
