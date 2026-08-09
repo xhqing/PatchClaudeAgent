@@ -650,6 +650,133 @@
           ]
         }
       }
+    },
+    "2.1.226": {
+      "ext_dir": "anthropic.claude-code-2.1.226-darwin-arm64",
+      "applied_at": "2026-08-09",
+      "patches": {
+        "002-session-history-running-badge": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4827739→4827975"
+            },
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 成功，追加 605 字符"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        },
+        "003-usage-icon-never-visible": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4827975→4827945"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        },
+        "004-suppress-login-on-auth-fail": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4827945→4827981"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        },
+        "005-context-window-from-env": {
+          "status": "verified",
+          "reason": "webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4827981→4827917"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        },
+        "007-diff-editor-follows-ui-theme": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4827917→4827971"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: locate+replace 成功，长度 4827971→4828025"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        },
+        "008-scroll-decoration-light-theme": {
+          "status": "verified",
+          "reason": "webview/index.css:verified",
+          "blocks": [
+            {
+              "file": "webview/index.css",
+              "status": "verified",
+              "reason": "webview/index.css: append 成功，追加 651 字符"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        },
+        "010-open-image-links": {
+          "status": "verified",
+          "reason": "extension.js:verified",
+          "blocks": [
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: locate+replace 成功，长度 2540390→2540515"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        },
+        "011-latex-math-rendering": {
+          "status": "verified",
+          "reason": "extension.js:verified; extension.js:verified; extension.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: locate+replace 成功，长度 2540515→2540540"
+            },
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: locate+replace 成功，长度 2540540→2540565"
+            },
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: locate+replace 成功，长度 2540565→2540590"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: append 成功，追加 1493 字符"
+            }
+          ],
+          "applied_at": "2026-08-09"
+        }
+      }
     }
   }
 }
