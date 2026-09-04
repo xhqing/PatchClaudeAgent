@@ -5,7 +5,9 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![Version](https://img.shields.io/badge/Version-2.1.226-blue.svg)](VERSION)
 [![Type](https://img.shields.io/badge/Type-AI%20Agent-FF1493.svg)](#)
+<img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/xhqing/xhqing/main/traffic/badges/PatchClaudeAgent.json" alt="Visits/day (14d)" />
 
 </div>
 
@@ -34,6 +36,9 @@ Current patches (each is a self-describing, self-verifying `.md` in `patches/`):
 | 008 | Light-theme diff shadow fix | Remove Monaco's dark scroll decorations (top black bar) and the card's dark truncation gradient (bottom shadow) in light theme |
 | 010 | Open image links | Markdown image links open in VSCode's built-in image viewer |
 | 011 | LaTeX math rendering | Render inline `$...$` and block `$$...$$` math via KaTeX in the conversation panel (library and fonts via jsdelivr CDN; requires network) |
+| 012 | Session state to file | Write each session's live `state` (idle/running/thinking/waiting_input) to `~/.claude/session_running/<sessionId>.txt` so external processes (e.g. the DayTradingAgent sampling watcher) can read whether a session is truly Running — surfaces the in-memory `busy`/`pendingInput` signal that patch 002 renders in the UI but that is otherwise unreachable from outside the extension |
+| 014 | Model picker shows GLM names | When going through a cc-bridge GLM upstream, the model picker and menu indicator display the real GLM model names (e.g. `glm-5.3`) instead of the spoofed Claude IDs — display layer only, selection logic untouched |
+| 015 | Footer model & effort buttons | Two always-visible buttons on the composer footer: the model button shows the current model's GLM name and opens the official model picker popup; the effort button shows the current level and opens a standalone level list (official menuPopup styling) for direct selection |
 
 > Note: 006 (precise usage display) and 009 (session reload button) have been archived, so numbering jumps from 005 to 007 and from 008 to 010.
 

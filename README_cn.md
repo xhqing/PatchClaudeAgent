@@ -5,7 +5,9 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
+[![Version](https://img.shields.io/badge/Version-2.1.226-blue.svg)](VERSION)
 [![Type](https://img.shields.io/badge/Type-AI%20Agent-FF1493.svg)](#)
+<img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/xhqing/xhqing/main/traffic/badges/PatchClaudeAgent.json" alt="Visits/day (14d)" />
 
 </div>
 
@@ -34,6 +36,9 @@ PatchClaudeAgent 是一个针对本机安装的 `anthropic.claude-code` VSCode �
 | 008 | 浅色 diff 阴影修复 | 消除浅色下 Monaco 的深色滚动阴影（顶部黑横条）与卡片截断渐变（底部黑阴影） |
 | 010 | 打开图片链接 | markdown 图片链接用 VSCode 内置图片查看器打开 |
 | 011 | LaTeX 数学渲染 | 对话面板用 KaTeX 渲染行内 `$...$` 与块级 `$$...$$` 公式（库与字体走 jsdelivr CDN，需联网） |
+| 012 | 会话状态写盘 | 把每个会话的实时 `state`（idle/running/thinking/waiting_input）写到 `~/.claude/session_running/<sessionId>.txt`，供外部进程（如 DayTradingAgent 密采样守护 watcher）读取会话是否真在 Running——把补丁 002 在 UI 上显示、但原本外部读不到的 `busy`/`pendingInput` 内存信号落到磁盘 |
+| 014 | 模型选择器显示 GLM 真名 | 经 cc-bridge（GLM 桥）上游时，模型选择器与菜单指示器显示真实 GLM 模型名（如 `glm-5.3`）而非伪装的 Claude ID——纯显示层，选择逻辑零改动 |
+| 015 | footer 模型与 Effort 按钮 | 输入框 footer 常驻两个按钮：模型按钮实时显示当前模型的 GLM 名、点击打开官方模型选择弹窗；Effort 按钮实时显示当前档位、点击弹出独立档位列表（复用官方 menuPopup 样式）直接选中 |
 
 > 注：006（用量精确显示）与 009（会话刷新按钮）已归档，故编号自 005 跳至 007、自 008 跳至 010。
 

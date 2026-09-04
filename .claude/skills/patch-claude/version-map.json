@@ -662,15 +662,15 @@
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: locate+replace 成功，长度 4827739→4827975"
+              "reason": "webview/index.js: 已应用（追加式，new 在 src）"
             },
             {
               "file": "webview/index.css",
               "status": "verified",
-              "reason": "webview/index.css: append 成功，追加 605 字符"
+              "reason": "webview/index.css: append 已应用（幂等命中 @keyframes ccRunPulse）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
         },
         "003-usage-icon-never-visible": {
           "status": "verified",
@@ -679,10 +679,10 @@
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: locate+replace 成功，长度 4827975→4827945"
+              "reason": "webview/index.js: 已应用（定位器确认 no_change）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
         },
         "004-suppress-login-on-auth-fail": {
           "status": "verified",
@@ -691,10 +691,10 @@
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: locate+replace 成功，长度 4827945→4827981"
+              "reason": "webview/index.js: 已应用（幂等标记 /*PATCHED: suppress login popup on token exhaustion*/ 命中）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
         },
         "005-context-window-from-env": {
           "status": "verified",
@@ -703,10 +703,10 @@
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: locate+replace 成功，长度 4827981→4827917"
+              "reason": "webview/index.js: 已应用（定位器确认 no_change）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
         },
         "007-diff-editor-follows-ui-theme": {
           "status": "verified",
@@ -715,15 +715,15 @@
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: locate+replace 成功，长度 4827917→4827971"
+              "reason": "webview/index.js: 已应用（幂等标记 renderOverviewRuler:!1,scrollBeyondLastLine:!1,minimap:{enabled:!1},automaticLayout:!0,theme:document 命中）"
             },
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: locate+replace 成功，长度 4827971→4828025"
+              "reason": "webview/index.js: 已应用（幂等标记 renderOverviewRuler:!0,scrollBeyondLastLine:!1,minimap:{enabled:!1},automaticLayout:!0,theme:document 命中）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
         },
         "008-scroll-decoration-light-theme": {
           "status": "verified",
@@ -732,10 +732,10 @@
             {
               "file": "webview/index.css",
               "status": "verified",
-              "reason": "webview/index.css: append 成功，追加 651 字符"
+              "reason": "webview/index.css: append 已应用（幂等命中 .cc-patch-008e）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
         },
         "010-open-image-links": {
           "status": "verified",
@@ -744,10 +744,10 @@
             {
               "file": "extension.js",
               "status": "verified",
-              "reason": "extension.js: locate+replace 成功，长度 2540390→2540515"
+              "reason": "extension.js: 已应用（幂等标记 executeCommand(\"vscode.open\", 命中）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
         },
         "011-latex-math-rendering": {
           "status": "verified",
@@ -756,25 +756,121 @@
             {
               "file": "extension.js",
               "status": "verified",
-              "reason": "extension.js: locate+replace 成功，长度 2540515→2540540"
+              "reason": "extension.js: 已应用（幂等标记 style-src ${e.cspSource} 'unsafe-inline' https://cdn.jsdelivr.net 命中）"
             },
             {
               "file": "extension.js",
               "status": "verified",
-              "reason": "extension.js: locate+replace 成功，长度 2540540→2540565"
+              "reason": "extension.js: 已应用（幂等标记 font-src ${e.cspSource} https://cdn.jsdelivr.net 命中）"
             },
             {
               "file": "extension.js",
               "status": "verified",
-              "reason": "extension.js: locate+replace 成功，长度 2540565→2540590"
+              "reason": "extension.js: 已应用（幂等标记 script-src 'nonce-${u}' https://cdn.jsdelivr.net 命中）"
             },
             {
               "file": "webview/index.js",
               "status": "verified",
-              "reason": "webview/index.js: append 成功，追加 1493 字符"
+              "reason": "webview/index.js: append 已应用（幂等命中 .ccKatex011）"
             }
           ],
-          "applied_at": "2026-08-09"
+          "applied_at": "2026-08-30"
+        },
+        "012-session-state-to-file": {
+          "status": "verified",
+          "reason": "extension.js:verified",
+          "blocks": [
+            {
+              "file": "extension.js",
+              "status": "verified",
+              "reason": "extension.js: 已应用（幂等标记 ccSessionStateWrite 命中）"
+            }
+          ],
+          "applied_at": "2026-08-30"
+        },
+        "014-model-picker-glm-names": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: append 已应用（幂等命中 ccGlmMap2）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 =ccGlm2(ae)??xbe 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 availableModels:ccGlmM2( 命中）"
+            }
+          ],
+          "applied_at": "2026-08-30"
+        },
+        "015-footer-model-effort-buttons": {
+          "status": "verified",
+          "reason": "webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified; webview/index.js:verified",
+          "blocks": [
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 ,[ccEffOpen,ccEffSet]=ie(!1) 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 ccEffSet,session: 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 ,lv:lv}})(), 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 return ccGlm2( 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 ccOpenMdl:()=>{z(Z!==!0)} 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 ,ccEffOpen,ccEffSet,session: 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 ,ccEffOpen,ccEffSet}){ 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 title:\"Select effort level\" 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 children:[ccEff.lv.map 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 style:{paddingLeft:\"8px\"},onClick:ccOpenMdl 命中）"
+            },
+            {
+              "file": "webview/index.js",
+              "status": "verified",
+              "reason": "webview/index.js: 已应用（幂等标记 style:{paddingLeft:\"8px\"},onClick:()=>ccEffSet 命中）"
+            }
+          ],
+          "applied_at": "2026-08-30"
         }
       }
     }

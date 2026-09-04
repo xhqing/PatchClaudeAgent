@@ -259,9 +259,16 @@ def apply_block(ext_dir, version, blk, check_only):
         if not app:
             return {"status": "broken", "reason": f"{rel}: append 块未提供代码块内容"}
         sentinel = app.splitlines()[-2] if len(app.splitlines()) >= 2 else app.strip()
-        # 幂等：用整段 append 文本里某个稳定标记判断是否已追加（取首个非空类名/keyframes 名）
-        marker = re.search(r'(@keyframes\s+\w+|\.[-\w]+)', app)
-        marker = marker.group(1) if marker else app[:30]
+        # 幂等标记：优先用补丁块显式声明的 "### idempotent:"（与 locate 分支一致，
+        # 声明值是补丁作者把关过的稳定串）；未声明时退回自动提取（首个非空
+        # @keyframes 名 / 类名 / 前 30 字符）。2026-08-30 修复：自动提取的
+        # r'\.[-\w]+' 在 JS append 文本上会命中字符串字面量内部（如 "glm-5.3"
+        # 里的 ".3"），导致误判已应用而跳过追加——凡 append 文本无 CSS 类名/
+        # keyframes 时，补丁应显式声明 idempotent 标记。
+        marker = blk["idempotent"] or (
+            re.search(r'(@keyframes\s+\w+|\.[-\w]+)', app).group(1)
+            if re.search(r'(@keyframes\s+\w+|\.[-\w]+)', app) else app[:30]
+        )
         if marker in src:
             return {"status": "verified", "reason": f"{rel}: append 已应用（幂等命中 {marker}）"}
         if check_only:
