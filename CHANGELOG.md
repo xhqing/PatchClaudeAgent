@@ -2,6 +2,20 @@
 
 本项目（PatchClaudeAgent / Tinker）维护针对本机 VSCode Claude Code 扩展（`anthropic.claude-code`）的自定义补丁。本文件记录补丁 Skill 与引擎的历次变更，每条写明「为什么改」与「改了什么」，便于日后排查回归。
 
+## 2026-09-04
+
+### 回滚（patch 014 v3：应用后 webview 白屏，当晚回滚恢复 v2）
+
+- **为什么改**：上一条记录的 014 v3（同名重声明覆盖升级）应用后用户报告 VSC 里的 CC 面板完全不显示。排查：扩展宿主日志（window4/5/6，22:11–22:40）显示扩展激活正常（`Claude code extension is now active`、MCP Server、AuthManager 均无异常），但 webview 连 `time_to_interactive` 初始化消息都没有（对比补丁前 window3 21:53 有完整 webview 消息流）——判定 webview JS 渲染早期崩溃。文件完整性核对无异常（字符数 4833458 = v2 态 4832515 + 追加 943，`node --check` 通过，v3 块内容读回正常），排除写入损坏 / 编码丢字节 / 截断；静态分析未找到语法或运行时炸点（顶层同名 function 重声明在 sloppy/strict/module 下均合法，v3 函数体各路径与 v2 行为等价），根因未定位。
+- **改了什么**：① 已安装扩展 `webview/index.js` 精确删除 v3 块（截断到 v2 块结尾标记），回滚后字符数 4832515 与 v2 态完全一致、`node --check` 通过；② `patches/014-model-picker-glm-names.md` 回退到 v2（改动 1 恢复 v2 append 块、哨兵 `ccGlmMap2`），版本演进段保留 v3 事故记录与教训——**升级一律走「新函数名」模式（v1→v2 已线上验证），禁止「同名重声明覆盖」**；v3 两需求（`claude-opus-4-6→deepseek-v4-flash`、隐藏 Default 项）记入维护备忘「待办需求」+ TODO 待按新函数名模式重做；③ SKILL.md 014 行、README / README_cn 的 014/015 行同步回 v2 表述并附 v3 事故简注。
+- **实测验证**：回滚后文件长度、尾部内容（`end patch-claude 014 v2`）、`node --check` 三项核对通过；待用户重载窗口确认 CC 面板恢复显示。
+
+### 变更（patch 014 升级 v3：模型列表 Opus 4.6 显示 deepseek-v4-flash + 隐藏 Default 项）【当晚已回滚，见上条】
+
+- **为什么改**：用户报告（2026-09-04）模型选择弹窗列表还有两个与桥接语义错位的残留项。① 本机 `~/.claude/settings.json` 的 `availableModels` 含 `claude-opus-4-6`（binary 侧 `vw_()` 构造，label「Opus 4.6」，value 与已成功改写的 Opus 4.8 项同构为 `claude-opus-4-6`），v2 映射表无此键 → 该项原样显示「Opus 4.6」；用户指定其显示名为 `deepseek-v4-flash`。② binary 侧 `oSo()` 构造的 Default 项（`{value:null,label:"Default"}`，经 `lJe()` 转 `value:"default"`）出现在列表首位，用户要求不显示。
+- **改了什么**：`patches/014-model-picker-glm-names.md` 改动 1 升级为 v3 append 块（新哨兵 `ccGlmMap3`，v2 块保留无害）：映射表补 `"claude-opus-4-6": "deepseek-v4-flash"`；`ccGlmM2` 重声明覆盖——先 filter 掉 `value==="default"` 的项再 map 改写；description 模板从 `"GLM (cc-bridge) · <名>"` 改为 `"cc-bridge · <名>"`（v3 起映射含非 GLM 名，描述再写 GLM 字样自相矛盾）。**有意不换函数名 `ccGlm2`/`ccGlmM2`**（重声明后者胜出，同 v1→v2 模式）——015 依赖这两个名字与 `availableModels:ccGlmM2(` 锚串、`ccGlmMap2` 存在性检查，换名会迫使 015 多处联动改锚；调用点零改动自动获得 v3 行为。改动 2/3 与 015 不动。README / README_cn 的 014 行（标题改「桥接真名」、效果补两项）与 015 行（「GLM 名」→「桥接真名」）同步更新。
+- **实测验证**：干跑 `--status`（改动 1 needs-reapply、改动 2/3 与 015 幂等 verified）；引擎真实应用 verified: 11（追加 943 字符）；`node --check` 通过；模拟 binary 列表数据行为测试——Default 项被移除、`claude-opus-4-6` 项显示 `deepseek-v4-flash`、`glm-5.3`/`glm-5.3-flash`/opus 别名改写不变、指示器 `ccGlm2("claude-opus-4-6")` 返回 `deepseek-v4-flash`、`ccGlm2("default")` 回退 undefined；v1/v2/v3 三块共存按序加载验证覆盖语义正确。
+
 ## 2026-08-30
 
 ### 修复（patch 015 补改动 2g/2g-2：footer 模型与 Effort 按钮文字在背景块内水平居中）

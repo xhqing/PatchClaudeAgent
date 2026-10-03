@@ -2,6 +2,12 @@
 
 活跃待办清单（仅未完成条目）。已处理条目移入 [TODO-archive.md](TODO-archive.md)，勿删。紧急度分节说明：🔴 不修会亏钱 / 安全事故 / 核心功能不可用；🟠 边界出错 / 防护缺口 / 口径不一致；🟡 文档措辞 / 格式 / 卫生问题；🟢 计划类新功能。每条必带唯一编号（T+序号，全局递增永不复用）与记录时间戳（精确到分钟）。
 
+## 🟠 橙色紧急度
+
+### CC 扩展补丁
+
+- [ ] **T3** 重做 patch 014 v3（新函数名模式），顺带排查同名重声明白屏根因：2026-09-04 的 v3（新哨兵 `ccGlmMap3` + **重声明同名** `ccGlm2`/`ccGlmM2` 覆盖）应用后 webview 白屏（扩展宿主正常、无 console 日志、连 `time_to_interactive` 都没有），当晚回滚恢复 v2。静态分析无炸点（顶层函数重声明合法、行为级单测通过、文件完整性核对无损），根因未定位——重做时改走 v1→v2 已线上验证的「新函数名」模式：`ccGlmMap3` + `ccGlm3`/`ccGlmM3`，014 改动 2/3 定位器加升级态，015 的锚（`availableModels:ccGlmM2(`）与调用（`return ccGlm2(`）同步升级。要实现的两需求：① `claude-opus-4-6` 显示 `deepseek-v4-flash`；② 弹窗列表隐藏 Default 项（filter `value==="default"`）。可选根因排查手段：webview devtools（Developer: Open Webview Developer Tools）复现时拿 console 报错、jsdom 离线加载对照（记录：2026-09-04 23:05）
+
 ## 🟢 绿色紧急度
 
 ### CC 扩展补丁

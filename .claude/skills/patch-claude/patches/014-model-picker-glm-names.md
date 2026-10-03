@@ -1,6 +1,6 @@
 ---
 id: 014-model-picker-glm-names
-title: 模型选择器与指示器显示 GLM 真名（v2：别名 + 描述改写）
+title: 模型选择器与指示器显示 GLM 真名（v2；v3 已回滚待查）
 targets: [webview/index.js]
 default_status: needs-reapply
 ---
@@ -9,10 +9,11 @@ default_status: needs-reapply
 
 CC VSCE 经 cc-bridge（GLM 桥）上游时，`MODEL_MAP` 把 Claude 模型名改写为 GLM 模型名（如 `claude-opus-4-8->glm-5.3`、`claude-opus-4-7->glm-5.3-flash`）。界面上的模型选择器（命令菜单 `Switch model…` 的指示器 + IQe 弹窗列表）仍显示 Claude 名，与实际服务的 GLM 模型语义错位。
 
-v1 只改写了 `displayName`，实测有两个漏洞（2026-08-30 用户报告）：
+版本演进：
 
-1. **opus 别名项不映射**：`~/.claude/settings.json` 的 `availableModels` 里手写的 `"opus"` 是官方别名项——native binary 侧 `REu()` 把它构造成 `{value:"opus", label:<ANTHROPIC_DEFAULT_OPUS_MODEL 原始 id>, description:"Custom Opus model"}`（本机该 env 指向 `claude-opus-4-8`，所以弹窗里有一项字面显示「claude-opus-4-8」）。它的 `value` 是 `"opus"` 而非 `"claude-opus-4-8"`，v1 的 ccGlmMap 查表不中 → 不显示 GLM 名。
-2. **description 误导字样残留**：各模型候选的 `description` 来自 binary 内模板（如 `ww_()` 的 `"Opus 4.8 · Previous Opus version"`），v1 只改 displayName、列表项下方描述仍是 Opus 字样，用户仍会误判。
+- **v1**（已被取代）：只改写 `displayName`，两个漏洞——opus 别名项不映射、description 误导字样残留。
+- **v2**（当前生效）：2026-08-30 修 v1 两漏洞——补家族别名（opus/sonnet/haiku）映射，displayName + description 一起改写，换新哨兵 `ccGlmMap2` + 新函数名 `ccGlm2`/`ccGlmM2`。
+- **v3**（**2026-09-04 晚间已回滚，根因待查**）：尝试「新哨兵 `ccGlmMap3` + 重声明同名函数 `ccGlm2`/`ccGlmM2` 覆盖 v2 实现」，内容为补 `claude-opus-4-6→deepseek-v4-flash` 映射 + filter 隐藏 Default 项 + description 模板改 `cc-bridge · <名>`。应用后 webview 白屏（面板完全不显示，扩展宿主正常、无 console 报错日志），回滚 v3 块后恢复。**教训：v1→v2 换函数名的「新名字」模式经线上验证安全；v3 的「同名重声明覆盖」模式在 webview 环境炸（具体炸点未定位，静态分析无明显 Syntax/运行时问题，`node --check` 通过、行为级单测通过）——该模式禁止再用，v3 需求（4-6 映射 + 隐藏 Default）日后按 v2 模式重做：新哨兵 `ccGlmMap3` + 新函数名 `ccGlm3`/`ccGlmM3`，014 改动 2/3 与 015 的锚、调用点同步升级**。
 
 v2 对策（全部显示层，选择逻辑零改动）：
 
@@ -61,6 +62,7 @@ function ccGlmM2(list) {
 - `ccGlm2(v)`：模型选择值 → GLM 真名；未映射 / default 返回 `undefined`（调用方 `??` 回退官方显示）。前缀匹配兜底 `claude-opus-4-8[1m]` / `opus[1m]` 带后缀变体。家族别名（opus/sonnet/haiku）与全名并列——注意前缀匹配方向是 `modelValue.indexOf(k)===0`（值以键开头），`claude-opus-4-8` 不会误命中 `opus` 键。
 - `ccGlmM2(list)`：模型列表浅拷贝改写，命中项 `displayName`=GLM 真名、`description`=统一 GLM 简述（覆盖 binary 模板的 Opus 字样）；未映射项原样返回。
 - `idempotent: ccGlmMap2`——v2 变量名是本块独有稳定串。**若日后改映射内容，需换新哨兵（如 `ccGlmMap3`）与映射一起更新**；v1 的 `ccGlmMap`/`ccGlm`/`ccGlmM` 块保留无害（不再被引用）。
+- **勿用「同名重声明覆盖」升级**（2026-09-04 v3 事故教训）：v3 曾以新哨兵 + 重声明同名 `ccGlm2`/`ccGlmM2` 的方式升级，应用后 webview 白屏，回滚恢复。升级一律走「新函数名」模式（`ccGlm3`/`ccGlmM3`），调用点（本补丁改动 2/3、015 改动 4）同步升级。
 
 #### verify
 
@@ -180,12 +182,14 @@ IQe 渲染处把 `claudeConfig` 的模型表传给 `availableModels` / `unavaila
 
 ## 维护备忘
 
-- 桥侧 `~/.cc-bridge/glm.env` 的 MODEL_MAP 变更后：更新改动 1 的 ccGlmMap2 + **换新哨兵**（如 `ccGlmMap3`）+ 重打补丁。改动 2/3 与映射内容无关、无需动。
+- 桥侧 `~/.cc-bridge/glm.env` 的 MODEL_MAP 变更后：更新改动 1 的 ccGlmMap2 + **换新哨兵**（如 `ccGlmMap3`）+ **换新函数名**（`ccGlm3`/`ccGlmM3`，勿用同名重声明——见 v3 事故）+ 同步升级改动 2/3 与 015 的调用点 + 重打补丁。
+- **待办需求（v3 遗留，待按新函数名模式重做）**：① `claude-opus-4-6` 显示为 `deepseek-v4-flash`（本机 settings.json availableModels 含此项，v2 表无此键故原样显示「Opus 4.6」）；② 弹窗列表隐藏 Default 项（binary `oSo()` 构造、`lJe()` 转 `value:"default"`，在 ccGlmM 后继版本里 filter 掉）。
 - 家族别名（opus/sonnet/haiku）映射的是**本机 env 默认指向**（`ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-4-8` 等）；若 env 默认指向换型号，别名目标要跟着改。
 - v1 块（`ccGlmMap`/`ccGlm`/`ccGlmM`）与 v1 调用点残留会被本补丁改动 2/3 原位升级；若文件里仍有 `=ccGlm(` / `availableModels:ccGlmM(` 残留说明升级未完成，重跑引擎即可。
 - 本补丁纯显示层、不动 extension.js 主进程——settings.json 写入的仍是官方模型 id。
 
 ## 已验证版本
 
-- `2.1.226`：v2 verified（2026-08-30，三态定位器干跑全过：v1 态升级 / fresh 注入 / v2 幂等；映射含家族别名：opus→glm-5.3、sonnet→glm-4.7、haiku→glm-4.6）。
+- `2.1.226`：v2 verified（2026-08-30 应用并线上验证；2026-09-04 晚 v3 事故后回滚回 v2 状态，字符数 4832515 与 v2 完全一致、`node --check` 通过）。
+- `2.1.226`：v3（2026-09-04 应用后 webview 白屏，**当晚回滚作废**——同名重声明覆盖模式在 webview 环境炸，具体炸点未定位；v3 需求见维护备忘「待办需求」）。
 - `2.1.226`：v1（2026-08-30 上午，已被 v2 取代；v1 缺别名与 description 改写）。

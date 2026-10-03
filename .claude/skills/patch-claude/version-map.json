@@ -669,8 +669,7 @@
               "status": "verified",
               "reason": "webview/index.css: append 已应用（幂等命中 @keyframes ccRunPulse）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "003-usage-icon-never-visible": {
           "status": "verified",
@@ -681,8 +680,7 @@
               "status": "verified",
               "reason": "webview/index.js: 已应用（定位器确认 no_change）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "004-suppress-login-on-auth-fail": {
           "status": "verified",
@@ -693,8 +691,7 @@
               "status": "verified",
               "reason": "webview/index.js: 已应用（幂等标记 /*PATCHED: suppress login popup on token exhaustion*/ 命中）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "005-context-window-from-env": {
           "status": "verified",
@@ -705,8 +702,7 @@
               "status": "verified",
               "reason": "webview/index.js: 已应用（定位器确认 no_change）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "007-diff-editor-follows-ui-theme": {
           "status": "verified",
@@ -722,8 +718,7 @@
               "status": "verified",
               "reason": "webview/index.js: 已应用（幂等标记 renderOverviewRuler:!0,scrollBeyondLastLine:!1,minimap:{enabled:!1},automaticLayout:!0,theme:document 命中）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "008-scroll-decoration-light-theme": {
           "status": "verified",
@@ -734,8 +729,7 @@
               "status": "verified",
               "reason": "webview/index.css: append 已应用（幂等命中 .cc-patch-008e）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "010-open-image-links": {
           "status": "verified",
@@ -746,8 +740,7 @@
               "status": "verified",
               "reason": "extension.js: 已应用（幂等标记 executeCommand(\"vscode.open\", 命中）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "011-latex-math-rendering": {
           "status": "verified",
@@ -773,8 +766,7 @@
               "status": "verified",
               "reason": "webview/index.js: append 已应用（幂等命中 .ccKatex011）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "012-session-state-to-file": {
           "status": "verified",
@@ -785,8 +777,7 @@
               "status": "verified",
               "reason": "extension.js: 已应用（幂等标记 ccSessionStateWrite 命中）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "014-model-picker-glm-names": {
           "status": "verified",
@@ -807,8 +798,7 @@
               "status": "verified",
               "reason": "webview/index.js: 已应用（幂等标记 availableModels:ccGlmM2( 命中）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         },
         "015-footer-model-effort-buttons": {
           "status": "verified",
@@ -869,8 +859,7 @@
               "status": "verified",
               "reason": "webview/index.js: 已应用（幂等标记 style:{paddingLeft:\"8px\"},onClick:()=>ccEffSet 命中）"
             }
-          ],
-          "applied_at": "2026-08-30"
+          ]
         }
       }
     }
